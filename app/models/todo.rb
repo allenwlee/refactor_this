@@ -1,18 +1,21 @@
 class Todo < ActiveRecord::Base
   attr_accessible :title, :body, :list_name, :todo_count, :status
+  after_create :change_status
   before_save :convert_list_name
   STATUSES = {
-    1 => 'incomplete', 
-    2 => 'complete', 
-    3 => 'in_progress', 
-    4 => 'moved', 
-    5 => 'deleted',
-    6 => 'postponed',
-    7 => 'important'
+    1 => 'Incomplete',
+    2 => 'Complete',
+    3 => 'In progress',
+    4 => 'Moved',
+    5 => 'Deleted',
+    6 => 'Postponed',
+    7 => 'Important'
   }
 
-  def change_status(number)
-    self.update_attribute 'status', number
+  def change_status#(status)
+    status = self.status
+    p status
+    self.update_attribute 'status', STATUSES.key(status)
   end
 
   def show_status

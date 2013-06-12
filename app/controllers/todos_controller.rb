@@ -14,17 +14,13 @@ class TodosController < ApplicationController
   end
 
   def create
-    list_name = params[:todo].delete(:list_name)
-    list_name = list_name.downcase
-    list_name = list_name.gsub ' ', '-'
+    p params[:todo][:status]
     @todo = Todo.new params[:todo]
+    # status = params[:todo][:status]
+    # @todo.change_status
+    p "TTOOOOOODDDDOOOOOO"
+    p @todo
     if @todo.save
-      @todo.update_attributes :list_name => list_name
-      @todos = Todo.where :list_name => list_name
-      @todos.each do |todo|
-        todo.update_attributes :todo_count => @todos.count
-        todo.save
-      end
       redirect_to root_url
     else
       render :new
@@ -37,20 +33,15 @@ class TodosController < ApplicationController
 
   def update
     @todo = Todo.find params[:id]
-    list_name = params[:todo].delete(:list_name)
-    list_name = list_name.downcase
-    list_name = list_name.gsub ' ', '-'
     if @todo.update_attributes params[:todo]
-      @todo.update_attributes :list_name => list_name
-      @todos = Todo.where :list_name => list_name
-      @todos.each do |todo|
-        todo.update_attributes :todo_count => @todos.count
-        todo.save
-      end
       redirect_to @todo
     else
       render :edit
     end
+  end
+
+  def get_status
+    @statuses = STATUSES
   end
 
   private
@@ -58,4 +49,5 @@ class TodosController < ApplicationController
   def load_todos
     @todos = Todo.all
   end
+
 end
